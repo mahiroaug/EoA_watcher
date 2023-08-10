@@ -22,7 +22,14 @@ aws lambda update-function-code --function-name web3-eoa_watcher --zip-file file
 
 ```
 INFURA_PROJECT_ID=***********
-INFURA_URL=**********
+
+# goerli
+INFURA_URL=https://goerli.infura.io/v3/
+
+# mainnet
+INFURA_URL=https://mainnet.infura.io/v3/
+
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/*****
+
 WATCH_ADDRESS01=0x***********
 ```
