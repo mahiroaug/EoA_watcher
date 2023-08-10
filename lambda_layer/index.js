@@ -44,14 +44,13 @@ exports.handler = async (event, context) => {
 
     // setting
     const today = new Date();
-    const formattedDate = today
-        .toLocaleDateString("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-        })
-        .split("/")
-        .join("-");
+    const formatter = new Intl.DateTimeFormat("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        timeZone: "Asia/Tokyo",
+    });
+    const formattedDate = formatter.format(today);
     const formattedTime = today
         .toLocaleTimeString("ja-JP", {
             hour: "2-digit",
@@ -76,6 +75,9 @@ exports.handler = async (event, context) => {
     }
 
     let message = "";
+    if (balanceUSD !== null) {
+        message += "oneLiner," + formattedDateTime + "," + address + "," + balanceETH + "," + balanceUSD + "," + priceUSD + "\n";
+    }
     message += "<!channel>";
     message += "ETH残高をお知らせしミャク〜\n";
     message += "- Date : `" + formattedDateTime + "`\n"; 
@@ -96,6 +98,7 @@ exports.handler = async (event, context) => {
 
 
     //****** READABILITY FOR ROBOT *****//
+    /*
     if (balanceUSD !== null) {
         console.log("READABILITY FOR ROBOT");
         let message2 = "";
@@ -109,6 +112,7 @@ exports.handler = async (event, context) => {
         })();
 
     }
+    */
 
 }
 
