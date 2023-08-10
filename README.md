@@ -1,3 +1,11 @@
+# provisioning
+
+```
+cd lambda_layer/nodejs
+npm install
+```
+
+
 # lambda deploy
 
 ```
@@ -8,4 +16,13 @@ aws lambda publish-layer-version --layer-name web3-eoacheacker-nodejs-layer  --d
 
 zip -r lambda.zip index.js lib
 aws lambda update-function-code --function-name web3-eoa_watcher --zip-file fileb://lambda.zip
+```
+
+# setup environment
+
+```
+INFURA_PROJECT_ID=***********
+INFURA_URL=**********
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/*****
+WATCH_ADDRESS01=0x***********
 ```

@@ -1,4 +1,4 @@
-const request = require('request');
+const { IncomingWebhook } = require("@slack/webhook");
 const Web3 = require('web3');
 const ccxt = require('ccxt');
 
@@ -6,7 +6,7 @@ const ccxt = require('ccxt');
 exports.handler = async (event, context) => {
     
     // definition
-    const slackWebhookUrl = process.env.SLACK_WEBHOOK_URL;
+    const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
     const INFURA_URL = process.env.INFURA_URL;
     const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || "";
     const binanceExchange = new ccxt.binance({ enableRateLimit: true });
@@ -87,27 +87,12 @@ exports.handler = async (event, context) => {
         message += "---> by USD : N/A\n";
     }
 
-    // response message
-    const options = {
-        url: slackWebhookUrl,
-        headers: {
-            'Content-type': 'application/json'
-        },
-        body: {
-            "text": message
-        },
-        json: true
-    };
-
     // post message
-    request.post(options, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            context.done(null, body);
-        } else {
-            console.log('error: ' + (response ? response.statusCode : 'unknown'));
-            context.done(null, 'error');
-        }
-    });
+    (async () => {
+        await webhook.send({
+            text: message,
+        });
+    })();
 
 
     //****** READABILITY FOR ROBOT *****//
@@ -116,27 +101,13 @@ exports.handler = async (event, context) => {
         let message2 = "";
         message2 += "oneLiner," + formattedDateTime + "," + address + "," + balanceETH + "," + balanceUSD + "," + priceUSD + "\n";
 
-        // response message2
-        const options2 = {
-            url: slackWebhookUrl,
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: {
-                "text": message2
-            },
-            json: true
-        };
+        // post message2
+        (async () => {
+            await webhook.send({
+                text: message2,
+            });
+        })();
 
-        // post message
-        request.post(options2, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                context.done(null, body);
-            } else {
-                console.log('error: ' + (response ? response.statusCode : 'unknown'));
-                context.done(null, 'error');
-            }
-        });
     }
 
 }
