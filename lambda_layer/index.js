@@ -1,4 +1,5 @@
-const { IncomingWebhook } = require("@slack/webhook");
+//const { IncomingWebhook } = require("@slack/webhook");
+const { WebClient } = require('@slack/web-api');
 const Web3 = require('web3');
 const ccxt = require('ccxt');
 
@@ -6,7 +7,9 @@ const ccxt = require('ccxt');
 exports.handler = async (event, context) => {
     
     // definition
-    const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
+    //const webhook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL);
+    const client = new WebClient(process.env.SLACK_OAUTH_TOKEN);
+    const channel = process.env.SLACK_POST_CHANNEL; 
     const INFURA_URL = process.env.INFURA_URL;
     const INFURA_PROJECT_ID = process.env.INFURA_PROJECT_ID || "";
     const binanceExchange = new ccxt.binance({ enableRateLimit: true });
@@ -89,9 +92,21 @@ exports.handler = async (event, context) => {
         message += "---> by USD : N/A\n";
     }
     console.log("message: ",message);
-    console.log("webhook: ",webhook);
+    //console.log("webhook: ",webhook);
 
     // post message
+    try {
+        const response = await client.chat.postMessage({
+            channel: channel,
+            text: message,
+        });
+        console.log("Message sent successfully!");
+    } catch (error) {
+        console.error("An error occurred:", error.message);
+    }
+
+
+    /*
     (async () => {
         try {
             await webhook.send({
@@ -102,6 +117,7 @@ exports.handler = async (event, context) => {
             console.error("An error occurred while sending the message:", error);
         }
     })();
+    */
 
 
     //****** READABILITY FOR ROBOT *****//

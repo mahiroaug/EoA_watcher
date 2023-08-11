@@ -30,7 +30,11 @@ INFURA_URL=https://goerli.infura.io/v3/
 INFURA_URL=https://mainnet.infura.io/v3/
 
 ### Incoming Webhooks for slack-app (NOT the custom-integration)
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/*****
+##SLACK_WEBHOOK_URL=https://hooks.slack.com/services/*****
+
+### OAUTH TOKEN
+SLACK_OAUTH_TOKEN=********
+SLACK_POST_CHANNEL=*******
 
 WATCH_ADDRESS01=0x***********
 ```

@@ -9,7 +9,11 @@
 	"features": {
 		"docker-in-docker": "latest",
 		"aws-cli": "latest"
-	}
+	},
+
+    "mounts": [
+        "source=${localEnv:HOME}/.aws,target=/home/node/.aws,type=bind,consistency=cached"
+    ]
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
