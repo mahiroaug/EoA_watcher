@@ -88,12 +88,19 @@ exports.handler = async (event, context) => {
     } else {
         message += "---> by USD : N/A\n";
     }
+    console.log("message: ",message);
+    console.log("webhook: ",webhook);
 
     // post message
     (async () => {
-        await webhook.send({
-            text: message,
-        });
+        try {
+            await webhook.send({
+                text: message,
+            });
+            console.log("Message sent successfully!");
+        } catch (error) {
+            console.error("An error occurred while sending the message:", error);
+        }
     })();
 
 
