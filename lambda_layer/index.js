@@ -46,6 +46,7 @@ exports.handler = async (event, context) => {
 
 
     // setting
+    const currentUnixTime = Math.floor(Date.now() / 1000);
     const today = new Date();
     const formatter = new Intl.DateTimeFormat("ja-JP", {
         year: "numeric",
@@ -64,6 +65,7 @@ exports.handler = async (event, context) => {
     const formattedDateTime = `${formattedDate} ${formattedTime}`;
 
     const address = process.env.WATCH_ADDRESS01;
+    const info = process.env.WATCH_ADDRESS01_INFO;
 
 
     // main
@@ -77,28 +79,44 @@ exports.handler = async (event, context) => {
         console.log('by USD: ', balanceUSD);
     }
 
-    let message = "";
+    let oneLiner = "";
     if (balanceUSD !== null) {
-        message += "oneLiner," + formattedDateTime + "," + address + "," + balanceETH + "," + balanceUSD + "," + priceUSD + "\n";
+        oneLiner = "`" + formattedDateTime + "," + address + "," + balanceETH + "," + balanceUSD + "," + priceUSD + "`";
     }
-    message += "<!channel>";
-    message += "ETH残高をお知らせしミャク〜\n";
-    message += "- Date : `" + formattedDateTime + "`\n"; 
-    message += "- ADDRESS : `" + address + "`\n";
-    message += "- ETH BALANCE : `" + balanceETH + " ETH`\n";
-    if (balanceUSD !== null) {
-        message += "---> by USD : `" + balanceUSD + " USD` (exchange rate : `" + priceUSD + " USD/ETH`)\n";
-    } else {
-        message += "---> by USD : N/A\n";
-    }
-    console.log("message: ",message);
-    //console.log("webhook: ",webhook);
+
+    let attachments = [
+        {
+            pretext: "<!channel> " + formattedDateTime + "のETH残高をお知らせしミャク〜\n" + oneLiner,
+            fallback: oneLiner,
+            color: "#9fec53",
+            author_name: "etherscan.io - Mainnet",
+            author_link: "https://etherscan.io",
+            author_icon: "https://etherscan.io/images/brandassets/etherscan-logo-circle.svg",
+            title: info,
+            title_link: "https://etherscan.io/address/" + address,
+            text: address,
+            fields: [
+                {
+                    title: "ETH",
+                    value: balanceETH,
+                    short: "true"
+                },
+                {
+                    title: "USD",
+                    value: balanceUSD,
+                    short: "true"
+                }
+            ],
+            footer: "exchange rate: " + priceUSD + " USD/ETH",
+            ts: currentUnixTime
+        }
+    ]
 
     // post message
     try {
         const response = await client.chat.postMessage({
             channel: channel,
-            text: message,
+            attachments: attachments,
         });
         console.log("Message sent successfully!");
     } catch (error) {

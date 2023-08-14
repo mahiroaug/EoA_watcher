@@ -16,6 +16,7 @@ aws lambda publish-layer-version --layer-name web3-eoacheacker-nodejs-layer  --d
 
 zip -r lambda.zip index.js
 aws lambda update-function-code --function-name web3-eoa_watcher --zip-file fileb://lambda.zip
+aws lambda update-function-code --function-name web3-eoa_watcher_prod --zip-file fileb://lambda.zip
 ```
 
 # setup environment
@@ -37,4 +38,5 @@ SLACK_OAUTH_TOKEN=********
 SLACK_POST_CHANNEL=*******
 
 WATCH_ADDRESS01=0x***********
+WATCH_ADDRESS01_INFO=<ADDRESS INFORMATION>
 ```
